@@ -10,6 +10,7 @@ interface TaskDao {
     @Query("SELECT * FROM tasks ORDER BY createdAt DESC")
     fun getAllTasks(): Flow<List<Task>>
 
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: Task)
 

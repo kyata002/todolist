@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.todolist"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -55,6 +55,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.material3:material3:1.3.0")
+    implementation("androidx.compose.material:material")
 
     // --- Core Android ---
     implementation("androidx.core:core-ktx:1.13.1")

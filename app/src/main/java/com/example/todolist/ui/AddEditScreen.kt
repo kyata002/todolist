@@ -10,17 +10,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.todolist.model.Priority
+import com.example.todolist.model.Type
 
 @OptIn(ExperimentalMaterial3Api::class)
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddEditScreen(
-    onSave: (String, String?, Priority) -> Unit,
+    onSave: (String, String?, Priority, Type) -> Unit,
     onCancel: () -> Unit
 ) {
     var title by remember { mutableStateOf("") }
     var note by remember { mutableStateOf<String?>(null) }
     var priority by remember { mutableStateOf(Priority.NORMAL) }
+    var typeTask by remember { mutableStateOf(Type.DAY) }
 
     Scaffold(
         topBar = {
@@ -37,7 +38,12 @@ fun AddEditScreen(
             ExtendedFloatingActionButton(
                 onClick = {
                     if (title.isNotBlank()) {
-                        onSave(title.trim(), note?.takeIf { it.isNotBlank() }, priority)
+                        onSave(
+                            title.trim(),
+                            note?.takeIf { it.isNotBlank() },
+                            priority,
+                            typeTask
+                        )
                     }
                 }
             ) {
@@ -75,6 +81,20 @@ fun AddEditScreen(
                         selected = priority == p,
                         onClick = { priority = p },
                         label = { Text(p.name.lowercase().replaceFirstChar { it.uppercase() }) },
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(12.dp))
+
+            Text("Type:", style = MaterialTheme.typography.titleMedium)
+            Row {
+                Type.values().forEach { t ->
+                    FilterChip(
+                        selected = typeTask == t,
+                        onClick = { typeTask = t },
+                        label = { Text(t.name.lowercase().replaceFirstChar { it.uppercase() }) },
                         modifier = Modifier.padding(end = 8.dp)
                     )
                 }

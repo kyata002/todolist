@@ -1,7 +1,5 @@
 package com.example.todolist.navigation
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -13,16 +11,18 @@ import com.example.todolist.data.TaskRepository
 import com.example.todolist.model.AppDatabase
 import com.example.todolist.ui.AddEditScreen
 import com.example.todolist.model.Task
-import com.example.todolist.ui.InboxScreenWithDB
+import com.example.todolist.ui.FocusScreen.FocusModeScreen
+import com.example.todolist.ui.FocusScreen.FocusViewModel
+import com.example.todolist.ui.InboxScreen.InboxScreenWithDB
 import com.example.todolist.ui.TaskViewModel
 import com.example.todolist.ui.TaskViewModelFactory
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")
     object AddEdit : Screen("add_edit")
+    object Focus : Screen("focus_mode")
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavGraph(
     navController: NavHostController,
@@ -60,12 +60,13 @@ fun AppNavGraph(
             )
 
             AddEditScreen(
-                onSave = { title, note, priority ->
+                onSave = { title, note, priority, typeTask ->
                     viewModel.addTask(
                         Task(
                             title = title,
                             note = note,
-                            priority = priority
+                            priority = priority,
+                            typeTask = typeTask
                         )
                     )
                     navController.popBackStack()
@@ -75,5 +76,18 @@ fun AppNavGraph(
                 }
             )
         }
+        composable(Screen.Focus.route) {
+            val context = LocalContext.current
+            val db = AppDatabase.getDatabase(context)
+            val repo = TaskRepository(db.taskDao())
+
+            // Khởi tạo FocusViewModel
+            val focusViewModel = FocusViewModel(repo)
+
+            FocusModeScreen(viewModel = focusViewModel){
+                navController.popBackStack()
+            }
+        }
+
     }
 }

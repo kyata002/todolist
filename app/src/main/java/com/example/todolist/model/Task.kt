@@ -13,11 +13,12 @@ data class Task(
     val isDone: Boolean = false,
     val priority: Priority = Priority.NORMAL,
     val estimateMin: Int? = null,
-    val dueEpoch: Long? = null,
+    val typeTask: Type? = Type.DAY,
     val createdAt: Long = System.currentTimeMillis()
 )
 
 
 enum class Priority { LOW, NORMAL, HIGH, VERYHIGH }
+enum class Type { DAY,WEEK, MONTH,  YEAR }
 
 
